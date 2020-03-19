@@ -38,7 +38,7 @@ const LessonType = new GraphQLObjectType({
       id: { type: GraphQLID },
       name: { type: GraphQLString },
       language: { type: GraphQLString },
-      platForm: { type: GraphQLString },
+      platform: { type: GraphQLString },
       instructor: {
         type: InstructorType,
         resolve: (parent, args) => {
@@ -112,10 +112,30 @@ const Mutation = new GraphQLObjectType({
 
         return newInstructor.save();
       }
+    },
+    addLesson: {
+      type: LessonType,
+      args: {
+        name: { type: GraphQLNonNull(GraphQLString) },
+        language: { type: GraphQLNonNull(GraphQLString) },
+        platform: { type: GraphQLNonNull(GraphQLString) },
+        instructorId: { type: GraphQLNonNull(GraphQLID) }
+      },
+      resolve: (parent, args) => {
+        let newLesson = new Lesson({
+          name: args.name,
+          language: args.language,
+          platform: args.platform,
+          authorId: args.authorId
+        });
+
+        return newLesson.save();
+      }
     }
   }
 });
 
 module.exports = new GraphQLSchema({
-  query: RootQuery
+  query: RootQuery,
+  mutation: Mutation
 });
