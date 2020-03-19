@@ -1,4 +1,6 @@
 const graphql = require("graphql");
+const Lesson = require("../Models/Lesson");
+const Instructor = require("../Models/Instructor");
 
 const {
   GraphQLObjectType,
@@ -91,6 +93,25 @@ const RootQuery = new GraphQLObjectType({
     instructors: {
       type: GraphQLList(InstructorType),
       resolve: () => dummyDataInstructors
+    }
+  }
+});
+
+const Mutation = new GraphQLObjectType({
+  name: "Mutation",
+  fields: {
+    addInstructor: {
+      type: InstructorType,
+      args: {
+        name: { type: GraphQLNonNull(GraphQLString) }
+      },
+      resolve: (parent, args) => {
+        let newInstructor = new Instructor({
+          name: args.name
+        });
+
+        return newInstructor.save();
+      }
     }
   }
 });
