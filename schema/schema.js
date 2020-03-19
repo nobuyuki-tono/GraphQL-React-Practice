@@ -42,9 +42,10 @@ const LessonType = new GraphQLObjectType({
       instructor: {
         type: InstructorType,
         resolve: (parent, args) => {
-          return dummyDataInstructors.find(
-            instructor => parent.instructorId === instructor.id
-          );
+          // return dummyDataInstructors.find(
+          //   instructor => parent.instructorId === instructor.id
+          // );
+          return Instructor.findById(parent.instructorId);
         }
       }
     };
@@ -59,9 +60,10 @@ const InstructorType = new GraphQLObjectType({
     lessons: {
       type: GraphQLList(LessonType),
       resolve: (parent, args) => {
-        return dummyDataLessons.filter(
-          lesson => lesson.instructorId === parent.id
-        );
+        // return dummyDataLessons.filter(
+        //   lesson => lesson.instructorId === parent.id
+        // );
+        return Lesson.find({ instructorId: parent.id });
       }
     }
   })
@@ -74,25 +76,29 @@ const RootQuery = new GraphQLObjectType({
       type: LessonType,
       args: { id: { type: GraphQLID } },
       resolve: (parent, args) => {
-        return dummyDataLessons.find(lesson => lesson.id === args.id);
+        // return dummyDataLessons.find(lesson => lesson.id === args.id);
+        return Lesson.findById(args.id);
       }
     },
     instructor: {
       type: InstructorType,
       args: { id: { type: GraphQLID } },
       resolve: (parent, args) => {
-        return dummyDataInstructors.find(
-          instructor => instructor.id === args.id
-        );
+        // return dummyDataInstructors.find(
+        //  instructor => instructor.id === args.id
+        // );
+        return Instructor.findById(args.id);
       }
     },
     lessons: {
       type: GraphQLList(LessonType),
-      resolve: () => dummyDataLessons
+      //resolve: () => dummyDataLessons
+      resolve: () => Lesson.find({})
     },
     instructors: {
       type: GraphQLList(InstructorType),
-      resolve: () => dummyDataInstructors
+      // resolve: () => dummyDataInstructors
+      resolve: () => Instructor.find({})
     }
   }
 });
@@ -126,10 +132,19 @@ const Mutation = new GraphQLObjectType({
           name: args.name,
           language: args.language,
           platform: args.platform,
-          authorId: args.authorId
+          instructorId: args.instructorId
         });
 
         return newLesson.save();
+      }
+    },
+    deleteLesson: {
+      type: LessonType,
+      args: {
+        id: { type: GraphQLID }
+      },
+      resolve: (parent, args) => {
+        return Lesson.findByIdAndDelete(args.id);
       }
     }
   }
