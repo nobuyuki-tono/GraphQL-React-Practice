@@ -17,6 +17,13 @@ const dummyDataLessons = [
     language: "JavaScript",
     platForm: "YouTube",
     instructorId: "1"
+  },
+  {
+    id: "2",
+    name: "test2",
+    language: "Python",
+    platForm: "YouTube",
+    instructorId: "2"
   }
 ];
 
@@ -30,7 +37,14 @@ const LessonType = new GraphQLObjectType({
       name: { type: GraphQLString },
       language: { type: GraphQLString },
       platForm: { type: GraphQLString },
-      instructorId: { type: GraphQLID }
+      instructor: {
+        type: InstructorType,
+        resolve: (parent, args) => {
+          return dummyDataInstructors.find(
+            instructor => parent.instructorId === instructor.id
+          );
+        }
+      }
     };
   }
 });
@@ -39,13 +53,37 @@ const InstructorType = new GraphQLObjectType({
   name: "Instructor",
   fields: () => ({
     id: { type: GraphQLID },
-    name: { type: GraphQLString }
+    name: { type: GraphQLString },
+    lessons: {
+      type: GraphQLList(LessonType),
+      resolve: (parent, args) => {
+        return dummyDataLessons.filter(
+          lesson => lesson.instructorId === parent.id
+        );
+      }
+    }
   })
 });
 
 const RootQuery = new GraphQLObjectType({
   name: "RootQueryType",
   fields: {
+    lesson: {
+      type: LessonType,
+      args: { id: { type: GraphQLID } },
+      resolve: (parent, args) => {
+        return dummyDataLessons.find(lesson => lesson.id === args.id);
+      }
+    },
+    instructor: {
+      type: InstructorType,
+      args: { id: { type: GraphQLID } },
+      resolve: (parent, args) => {
+        return dummyDataInstructors.find(
+          instructor => instructor.id === args.id
+        );
+      }
+    },
     lessons: {
       type: GraphQLList(LessonType),
       resolve: () => dummyDataLessons
