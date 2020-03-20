@@ -2,6 +2,7 @@ import React from "react";
 import ApolloClient from "apollo-boost";
 import { ApolloProvider } from "@apollo/react-hooks";
 import LessonList from "./components/LessonList";
+import AddLesson from "./components/AddLesson";
 
 import "./App.css";
 
@@ -15,6 +16,7 @@ function App() {
     <ApolloProvider client={client}>
       <div className="App">
         <LessonList />
+        <AddLesson />
       </div>
     </ApolloProvider>
   );
