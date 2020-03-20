@@ -15,7 +15,28 @@ const AddLesson = () => {
   const [name, setName] = useState("");
   const [language, setLanguage] = useState("");
   const [platform, setPlatform] = useState("");
-  const [instructor, setInstructor] = useState("");
+  const [instructorId, setInstructor] = useState("");
+
+  // Display instructor
+  const displayInstructor = () => {
+    const myData = data;
+
+    if (error) {
+      console.log(error);
+    }
+
+    if (loading) {
+      return <option disabled>Loading...</option>;
+    } else {
+      return myData.instructors.map(instrunctor => {
+        return (
+          <option key={instrunctor.id} value={instrunctor.id}>
+            {instrunctor.name}
+          </option>
+        );
+      });
+    }
+  };
 
   const handleChangeName = e => {
     setName(e.target.value);
@@ -37,7 +58,8 @@ const AddLesson = () => {
     e.preventDefault();
 
     addLesson({
-      variables: { name, language, platform, instructorId }
+      variables: { name, language, platform, instructorId },
+      refetchQueries: [{ query: getLessonsQuery }]
     });
 
     setName("");
@@ -52,22 +74,25 @@ const AddLesson = () => {
     <form onSubmit={handleSubmit} action="">
       <div className="field">
         <label htmlFor="">Lesson Name: </label>
-        <input onCahnge={handleChangeName} type="text" />
+        <input onChange={handleChangeName} value={name} type="text" />
       </div>
       <div className="field">
         <label htmlFor="">Language: </label>
-        <input onChange={handleChangeLanguage} type="text" />
+        <input onChange={handleChangeLanguage} value={language} type="text" />
       </div>
       <div className="field">
         <label htmlFor="">Platform: </label>
-        <input onChange={handleChangePlatform} type="text" />
+        <input onChange={handleChangePlatform} value={platform} type="text" />
       </div>
       <div className="field">
         <label htmlFor="">Instructor: </label>
         <select onChange={handleSelectChange} name="" id="">
           <option value="">Select instructor</option>
+          {displayInstructor()}
         </select>
       </div>
+
+      <button>+</button>
     </form>
   );
 };

@@ -21,8 +21,18 @@ const getLessonsQuery = gql`
 `;
 
 const addLessonMutaion = gql`
-  mutation addLesson($name: String!, $language: String, $platform: String!, instructorId: ID!){
-    addLesson(name: $name, language: $language, platform: $platform, instructorId: $instructorId){
+  mutation addLesson(
+    $name: String!
+    $language: String!
+    $platform: String!
+    $instructorId: ID!
+  ) {
+    addLesson(
+      name: $name
+      language: $language
+      platform: $platform
+      instructorId: $instructorId
+    ) {
       name
       id
     }
