@@ -9,6 +9,7 @@ const LessonDetails = () => {
         <li>2. Test</li>
         <li>3. Test</li>
       </ul>
+      <h3>The Lesonn I like</h3>
     </div>
   );
 };
