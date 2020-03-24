@@ -1,6 +1,9 @@
 import React from "react";
 
 const LessonDetails = () => {
+  const showDetail = () => {
+    return <h1>Show Detail</h1>;
+  };
   return (
     <div>
       <h1>Hello</h1>
